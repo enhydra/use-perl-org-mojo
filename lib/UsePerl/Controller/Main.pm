@@ -40,7 +40,9 @@ sub journals ($self) {
 sub story ($self) {
 	my( $sid ) = $self->req->query_params->param( 'sid' );
 
-	$self->render;
+	$self->render(
+		sid => $sid,
+		);
 	}
 
 # ~author_name
