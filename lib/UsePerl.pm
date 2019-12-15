@@ -1,6 +1,7 @@
 
 package UsePerl;
 use Mojo::Base 'Mojolicious';
+use UsePerl::Model::Author;
 
 use feature qw(signatures);
 no warnings qw(experimental::signatures);
@@ -9,6 +10,10 @@ no warnings qw(experimental::signatures);
 sub startup ($self) {
 	# Load configuration from hash returned by "my_app.conf"
 	my $config = $self->plugin('Config');
+
+	$self->helper( 'author_model' => sub {
+		state $users = UsePerl::Model::Author->new
+		} );
 
 	# Router
 	my $r = $self->routes;
