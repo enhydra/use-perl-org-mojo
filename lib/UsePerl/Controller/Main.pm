@@ -4,6 +4,8 @@ use Mojo::Base 'Mojolicious::Controller';
 use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
+my %authors = map { $_, 1 } qw(brian_d_foy pudge);
+
 sub index ($self) {
 	$self->render( title => 'Use.perl.org archive');
 	}
@@ -46,7 +48,13 @@ sub story ($self) {
 sub author ($self) {
 	my( $author ) = $self->param( 'author' );
 
-	$self->render( author => $author );
+	unless( exists $authors{$author} ) {
+		return $self->render( status => 404 );
+		}
+
+	$self->render(
+		author => $author
+		);
 	}
 
 # ~author_name/journal/\d+

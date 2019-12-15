@@ -11,18 +11,31 @@ subtest index => sub {
 		->status_is(200)
 	};
 
-subtest brian => sub {
-	$t
-		->get_ok('/~brian_d_foy')
-		->status_is(200)
-		->content_like( qr/brian_d_foy/i );
-	};
+my @users = qw( brian_d_foy pudge );
 
-subtest pudge => sub {
+foreach my $user ( @users ) {
+	subtest $user => sub {
+		$t
+			->get_ok("/~$user")
+			->status_is(200)
+			->content_like( qr/$user/i );
+
+		$t
+			->get_ok("/~$user/")
+			->status_is(200)
+			->content_like( qr/$user/i );
+		};
+	}
+
+subtest bad_users => sub {
 	$t
-		->get_ok( '/~pudge' )
-		->status_is( 200 )
-		->content_like( qr/pudge/i );
+		->get_ok('/~not_there')
+		->status_is(404)
+		;
+	$t
+		->get_ok('/~not_there/')
+		->status_is(404)
+		;
 	};
 
 done_testing();
